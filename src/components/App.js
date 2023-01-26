@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Grid } from "semantic-ui-react";
-import Adapter from "../Adapter";
+import Adapter from '../Adapter'
 import TVShowList from "./TVShowList";
 import Nav from "./Nav";
 import SelectedShowContainer from "./SelectedShowContainer";
@@ -13,6 +13,9 @@ function App() {
   const [filterByRating, setFilterByRating] = useState("");
 
   useEffect(() => {
+    // fetch("http://api.tvmaze.com/shows")
+    // .then(res => res.json())
+    // .then((shows) => setShows(shows));
     Adapter.getShows().then((shows) => setShows(shows));
   }, []);
 
@@ -31,6 +34,12 @@ function App() {
   }
 
   function selectShow(show) {
+    //  fetch(`http://api.tvmaze.com/shows/${show.id}/episodes`)
+    // .then(res => res.json)
+    // .then((episodes) => {
+    //   setSelectedShow(show);
+    //   setEpisodes(episodes);
+    // });
     Adapter.getShowEpisodes(show.id).then((episodes) => {
       setSelectedShow(show);
       setEpisodes(episodes);
@@ -40,17 +49,13 @@ function App() {
   let displayShows = shows;
   if (filterByRating) {
     displayShows = displayShows.filter((s) => {
-      s.rating.average >= filterByRating;
+      return s.rating.average >= filterByRating;
     });
   }
 
   return (
     <div>
-      <Nav
-        handleFilter={handleFilter}
-        handleSearch={handleSearch}
-        searchTerm={searchTerm}
-      />
+      <Nav handleFilter={handleFilter} handleSearch={handleSearch} searchTerm={searchTerm}/>
       <Grid celled>
         <Grid.Column width={5}>
           {!!selectedShow ? (
@@ -64,7 +69,7 @@ function App() {
         </Grid.Column>
         <Grid.Column width={11}>
           <TVShowList
-            shows={displayShows}
+            displayShows={displayShows}
             selectShow={selectShow}
             searchTerm={searchTerm}
           />
